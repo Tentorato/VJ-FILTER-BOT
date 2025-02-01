@@ -114,7 +114,6 @@ async def start(client, message):
                         reply_markup=InlineKeyboardMarkup(btn)
                     )
                 return
-
         except Exception as e:
             print(f"Error in start command: {e}")
             
