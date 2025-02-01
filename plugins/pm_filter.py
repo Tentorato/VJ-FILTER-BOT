@@ -132,7 +132,7 @@ async def next_page(bot, query):
     files, n_offset, total = await get_search_results(query.message.chat.id, search, offset=offset, filter=True)
     try:
         n_offset = int(n_offset)
-    except:
+    except ValueError:
         n_offset = 0
 
     if not files:
