@@ -120,14 +120,15 @@ async def next_page(bot, query):
     curr_time = datetime.now(pytz.timezone('Asia/Kolkata')).time()
     if int(req) not in [query.from_user.id, 0]:
         return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-    try:
-        offset = int(offset)
+    try:        
+        ident, req, key, offset = query.data.split("_")
+        offset = int(offset)   #Error may happen here
     except ValueError:
         offset = 0
     search = FRESH.get(key)
-   # if not search:
-      #  await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
-       # return
+   if not search:       
+       await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
+       return
 
     files, n_offset, total = await get_search_results(query.message.chat.id, search, offset=offset, filter=True)
     try:
