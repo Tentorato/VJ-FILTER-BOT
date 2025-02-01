@@ -107,9 +107,9 @@ async def start(client, message):
                     try:                        
                         kk, file_id = message.command[1].split("_", 1)
                         btn.append([InlineKeyboardButton("♻️ Try Again ♻️", callback_data=f"checksub#{kk}#{file_id}")])
-                    except (IndexError, ValueError):
-                        username = (await client.get_me()).username
-                        btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
+                else:                    
+                    username = (await client.get_me()).username
+                    btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
                 await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", reply_markup=InlineKeyboardMarkup(btn))          
                 return
         except Exception as e:
