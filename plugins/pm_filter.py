@@ -123,8 +123,7 @@ async def next_page(bot, query):
     try:        
         ident, req, key, offset = query.data.split("_")
         offset = int(offset)   #Error may happen here
-    except ValueError:
-        offset = 0
+    finally:
     search = FRESH.get(key)
    if not search:       
        await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
