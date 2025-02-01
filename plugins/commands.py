@@ -102,17 +102,21 @@ async def start(client, message):
     if AUTH_CHANNEL:
         try:
             btn = await is_subscribed(client, message, AUTH_CHANNEL)
-            if btn:
-                username = (await client.get_me()).username
-                if message.command[1]:
-                    btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
-                else:
-                    btn.append([InlineKeyboardButton("♻️ Try Again ♻️", callback_data="callbackquery.answer ("Join Update Channel Then Try Again...☠️", show_alert = True)")])
-                await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", reply_markup=InlineKeyboardMarkup(btn))
+            if btn is not False:
+                if btn:
+                    username = (await client.get_me()).username
+                    if len(message.command) > 1:  # Ensure command has an argument
+                        btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"t.me/{username}?start={message.command[1]}")]) # added start parameter
+                    else:
+                         btn.append([InlineKeyboardButton("♻️ Try Again ♻️", callback_data=f"try_again")])
+                    await message.reply_text(
+                        text=f"👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇",
+                        reply_markup=InlineKeyboardMarkup(btn)
+                    )
                 return
+
         except Exception as e:
-            print(e)
-            return await message.reply_text("something wrong with force subscribe.")
+            print(f"Error in start command: {e}")
             
     if len(message.command) == 2 and message.command[1] in ["subscribe", "error", "okay", "help"]:
         if PREMIUM_AND_REFERAL_MODE == True:
