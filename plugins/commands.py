@@ -20,18 +20,6 @@ logger = logging.getLogger(__name__)
 BATCH_FILES = {}
 join_db = JoinReqs
 
-async def is_subscribed(bot, query, channel):
-    btn = []
-    for id in channel:
-        chat = await bot.get_chat(int(id))
-        try:
-            await bot.get_chat_member(id, query.from_user.id)
-        except UserNotParticipant:
-            btn.append([InlineKeyboardButton(f'Join {chat.title}', url=chat.invite_link)])
-        except Exception as e:
-            pass
-    return btn
-
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
     try:
@@ -98,24 +86,6 @@ async def start(client, message):
             parse_mode=enums.ParseMode.HTML
         )
         return
-
-    if AUTH_CHANNEL:
-        try:
-            btn = await is_subscribed(client, message, AUTH_CHANNEL)
-            if btn is not False:
-                if btn:
-                    username = (await client.get_me()).username
-                    if len(message.command) > 1:  # Ensure command has an argument
-                        btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"t.me/{username}?start={message.command[1]}")]) # added start parameter
-                    else:
-                         btn.append([InlineKeyboardButton("♻️ Try Again ♻️", callback_data=f"try_again")])
-                    await message.reply_text(
-                        text=f"👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇",
-                        reply_markup=InlineKeyboardMarkup(btn)
-                    )
-                return
-        except Exception as e:
-            print(f"Error in start command: {e}")
             
     if len(message.command) == 2 and message.command[1] in ["subscribe", "error", "okay", "help"]:
         if PREMIUM_AND_REFERAL_MODE == True:
