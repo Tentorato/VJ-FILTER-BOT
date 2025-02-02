@@ -5,7 +5,7 @@
 import os, string, logging, random, asyncio, time, datetime, re, sys, json, base64
 from Script import script
 from pyrogram import Client, filters, enums
-from pyrogram.errors import *
+from pyrogram.errors import ChatAdminRequired, FloodWait, UserNotParticipant
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database.ia_filterdb import col, sec_col, get_file_details, unpack_new_file_id, get_bad_files
 from database.users_chats_db import db, delete_all_referal_users, get_referal_users_count, get_referal_all_users, referal_add_user
@@ -20,17 +20,34 @@ logger = logging.getLogger(__name__)
 BATCH_FILES = {}
 join_db = JoinReqs
 
-async def is_subscribed(bot, query, channel):
-    btn = []
-    for id in channel:
-        chat = await bot.get_chat(int(id))
-        try:
-            await bot.get_chat_member(id, query.from_user.id)
-        except UserNotParticipant:
-            btn.append([InlineKeyboardButton(f'Join {chat.title}', url=chat.invite_link)])
-        except Exception as e:
-            pass
-    return btn
+async def is_subscribed(client, message, channel_id):
+    """Checks if a user is subscribed to a channel.
+
+    Args:
+        client: Pyrogram Client instance.
+        message: Pyrogram Message object.
+        channel_id: The ID of the channel to check.
+
+    Returns:
+         list: A list containing InlineKeyboardButton with join URL if not joined else returns empty list.
+         Also returns False if user is not found.
+    """
+    try:
+        chat = await client.get_chat(channel_id)
+        user = await client.get_chat_member(channel_id, message.from_user.id)
+        if user.status in ["member", "administrator", "creator"]:
+            return []
+        else:
+            return [[InlineKeyboardButton(text=f"Join {chat.title}", url=chat.invite_link)]]
+
+    except UserNotParticipant:
+        # User is not a member, create the join button
+       chat = await client.get_chat(channel_id)
+       return [[InlineKeyboardButton(text=f"Join {chat.title}", url=chat.invite_link)]]
+    
+    except Exception as e:
+      print(f"Error checking subscription: {e}")
+      return False
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
