@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://envs.sh/TME.jpg" alt="VJ-Filter-Bot Logo">
+  <img src="https://envs.sh/afL.jpg" alt="Auto-Filter-Bot Logo">
 </p>
 <h1 align="center">
   VJ FILTER BOT
 </h1>
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+VJ+Filter+Bot!)
+![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+ZoneFlixTv+Filter+Bot!)
 </p>
 
 ## Main Feature 
