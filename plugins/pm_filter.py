@@ -83,7 +83,25 @@ async def pm_text(bot, message):
         ai_search = True
         reply_msg = await bot.send_message(message.from_user.id, f"<b><i>Searching For {content} 🔍</i></b>", reply_to_message_id=message.id)
         await auto_filter(bot, content, message, reply_msg, ai_search)
+
+@Client.on_callback_query(filters.regex("^try_again$")) # added regex filter
+async def handle_attack(client, callback_query):
     
+    if callback_query.data == "try_again":
+         try:
+            btn = await is_subscribed(client, callback_query.message, AUTH_CHANNEL)
+            if btn is not False:
+                if btn:
+                    await callback_query.answer("You haven't joined our channel.", show_alert=True)
+                else:
+                    await callback_query.answer("Successfully Subscribed!.", show_alert=False)
+                    await callback_query.message.edit_text("Successfully Subscribed!")
+            else:
+               await callback_query.answer("An error occurred while checking subscription. Please try again later.", show_alert=True)
+         except Exception as e:
+               print(f"Error in try_again callback: {e}")
+               await callback_query.answer("An error occurred while checking subscription. Please try again later.", show_alert=True)
+
 @Client.on_callback_query(filters.regex(r"^next"))
 async def next_page(bot, query):
     ident, req, key, offset = query.data.split("_")
