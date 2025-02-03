@@ -121,7 +121,7 @@ async def auto_filter(client, message):
 
 
 # --- Admin Command Handler ---
-@Client.on_message(filters.command("join_request") & filters.user(ADMIN))
+@Client.on_message(filters.command("join_requests") & filters.user(ADMINS))
 async def stats(client, message):
   total_users = 0
   async for dialog in client.get_dialogs():
