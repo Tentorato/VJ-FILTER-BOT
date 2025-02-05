@@ -99,7 +99,7 @@ async def start(client, message):
             return
         try:
             channels = (await get_settings(int(message.from_user.id))).get('fsub')
-            if channels:
+            if channels:        
                 btn = await is_subscribed(client, message, channels)
                 if btn:                    
                     kk, file_id = message.command[1].split("_", 1)
@@ -120,9 +120,9 @@ async def start(client, message):
                         parse_mode=enums.ParseMode.HTML
                     )
                     return
-            except Exception as e:                 
-                print(e)
-                return await message.reply_text("something wrong with force subscribe.")   
+        except Exception as e:                 
+            print(e)
+            return await message.reply_text("something wrong with force subscribe.")   
                     
     if len(message.command) == 2 and message.command[1] in ["subscribe", "error", "okay", "help"]:
         if PREMIUM_AND_REFERAL_MODE == True:
