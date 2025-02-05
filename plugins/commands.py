@@ -98,9 +98,9 @@ async def start(client, message):
             await message.reply_text("Make sure Bot is admin in Forcesub channel")
             return
         try:
-            channels = (await get_settings(int(message.from_user.id))).get('fsub')
-            if channels:        
-                btn = await is_subscribed(client, message, channels)
+            channel = (await get_settings(int(message.from_user.id))).get('fsub')
+            if channel:        
+                btn = await is_subscribed(client, message, channel)
                 if btn:                    
                     kk, file_id = message.command[1].split("_", 1)
                     btn.append([InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", callback_data=f"checksub#{kk}#{file_id}")])
