@@ -104,7 +104,7 @@ async def start(client, message):
             if btn:
                 kk, file_id = message.command[1].split("_", 1)
                 btn.append([InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", callback_data=f"checksub#{kk}#{file_id}")])
-                reply_markup = InlineKeyboardMarkup(btn)
+                reply_markup = InlineKeyboardMarkup(btn) # Assign a value to reply_markup here
                 caption = (
                     f"👋 Hello {message.from_user.mention}\n\n"
                     "Yᴏᴜ ʜᴀᴠᴇ ɴᴏᴛ Jᴏɪɴᴇᴅ ᴀʟʟ ᴏᴜʀ Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟs.\n"
