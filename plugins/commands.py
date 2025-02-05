@@ -114,7 +114,7 @@ async def start(client, message):
                     "**Jᴏɪɴ Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟs** वाले बटन पर Cʟɪᴄᴋ करें। और सुनिश्चित करें कि आपने **सभी चैनल्स** को ज्वाइन किया है।\n"
                     "इसके बाद आप फिर से ᴛʀʏ करें।..")
                 await message.reply_photo(
-                    photo=random.choice(FSUB_PICS),
+                    photo=random.choice(PICS),
                     caption=caption,
                     reply_markup=reply_markup,
                     parse_mode=enums.ParseMode.HTML
