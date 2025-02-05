@@ -120,7 +120,7 @@ async def start(client, message):
                         parse_mode=enums.ParseMode.HTML
                     )
                     return
-               except Exception as e:                    
+                except Exception as e:                    
                     print(e)
                     return await message.reply_text("something wrong with force subscribe.")   
                     
