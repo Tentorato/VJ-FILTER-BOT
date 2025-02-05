@@ -62,36 +62,49 @@ async def pub_is_subscribed(bot, query, channel):
             pass
     return btn
 
-async def is_subscribed(bot, query):
+async def is_subscribed(bot, query, channels):    
     if REQUEST_TO_JOIN_MODE == True and join_db().isActive():
         try:
             user = await join_db().get_user(query.from_user.id)
             if user and user["user_id"] == query.from_user.id:
-                return True
+                return True  # User is considered subscribed through join_db
             else:
-                try:
-                    user_data = await bot.get_chat_member(AUTH_CHANNEL, query.from_user.id)
-                except UserNotParticipant:
-                    pass
-                except Exception as e:
-                    logger.exception(e)
-                else:
-                    if user_data.status != enums.ChatMemberStatus.BANNED:
-                        return True
+                pass  # No need for an else block here, just continue checking subscription
         except Exception as e:
-            logger.exception(e)
-            return False
-    else:
+            print(f"Error accessing join_db: {e}")
+            return None  # Or False, depending on desired behavior if join_db fails
+
+    btn = []  # Initialize an empty list to store the InlineKeyboardButtons
+    for channel_id in channels:  # Corrected variable name: channel -> channels
         try:
-            user = await bot.get_chat_member(AUTH_CHANNEL, query.from_user.id)
+            channel_id = int(channel_id)  # Ensure channel_id is an integer
+            chat: Chat = await bot.get_chat(channel_id)  # type: ignore
+            await bot.get_chat_member(channel_id, query.from_user.id)  # Raises UserNotParticipant if not a member
         except UserNotParticipant:
-            pass
+            try:
+                if hasattr(chat, 'invite_link') and chat.invite_link:
+                    btn.append([InlineKeyboardButton(f'❤️ {chat.title}', url=chat.invite_link)])
+                else:
+                    # If the chat object doesn't have an invite link, create one.
+                    try:
+                        invite_link: ChatInviteLink = await bot.create_chat_invite_link(channel_id, creates_join_request=True)  # Create the invite link. type: ignore
+                        btn.append([InlineKeyboardButton(f'❤️ {chat.title}', url=invite_link.invite_link)])  # type: ignore
+                    except Exception as e:
+                        print(f"Error creating invite link for channel {channel_id}: {e}")
+                        return None  # Return if something goes wrong
+
+            except Exception as e:
+                print(f"Error getting or creating invite link for channel {channel_id}: {e}")
+                return None  # Return if something goes wrong
+
         except Exception as e:
-            logger.exception(e)
-        else:
-            if user.status != enums.ChatMemberStatus.BANNED:
-                return True
-        return False
+            print(f"Error checking subscription for channel {channel_id}: {e}")
+            return None  # Return if something goes wrong
+
+    if not btn:  # If btn is empty, the user is subscribed to all channels
+        return True  # Indicate that the user is subscribed
+    else:
+        return btn  # Return the list of InlineKeyboardButtons
 
 async def get_poster(query, bulk=False, id=False, file=None):
     if not id:
