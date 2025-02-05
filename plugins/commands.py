@@ -99,12 +99,12 @@ async def start(client, message):
             return
         try:
             channels = (await get_settings(int(message.from_user.id))).get('fsub')
-        if channels:  
+            if channels:  
             btn = await is_subscribed(client, message, channels)
             if btn:
                 kk, file_id = message.command[1].split("_", 1)
                 btn.append([InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", callback_data=f"checksub#{kk}#{file_id}")])
-                reply_markup = InlineKeyboardMarkup(btn) # Assign a value to reply_markup here
+                reply_markup = InlineKeyboardMarkup(btn)
                 caption = (
                     f"👋 Hello {message.from_user.mention}\n\n"
                     "Yᴏᴜ ʜᴀᴠᴇ ɴᴏᴛ Jᴏɪɴᴇᴅ ᴀʟʟ ᴏᴜʀ Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟs.\n"
@@ -114,7 +114,7 @@ async def start(client, message):
                     "**Jᴏɪɴ Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟs** वाले बटन पर Cʟɪᴄᴋ करें। और सुनिश्चित करें कि आपने **सभी चैनल्स** को ज्वाइन किया है।\n"
                     "इसके बाद आप फिर से ᴛʀʏ करें।..")
                 await message.reply_photo(
-                    photo=random.choice(PICS),
+                    photo=random.choice(FSUB_PICS),
                     caption=caption,
                     reply_markup=reply_markup,
                     parse_mode=enums.ParseMode.HTML
