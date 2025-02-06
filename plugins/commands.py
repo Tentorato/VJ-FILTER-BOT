@@ -87,16 +87,7 @@ async def start(client, message):
         )
         return       
     
-    if message.command[1] != "subscribe":        
-        try:
-            if REQUEST_TO_JOIN_MODE == True:
-                invite_link = await client.create_chat_invite_link(chat_id=(int(AUTH_CHANNEL)), creates_join_request=True)
-            else:
-                invite_link = await client.create_chat_invite_link(chat_id=(int(AUTH_CHANNEL)))
-        except Exception as e:
-            print(e)
-            await message.reply_text("Make sure Bot is admin in Forcesub channel")
-            return
+    if message.command[1] != "subscribe":
         try:
             channel = (await get_settings(int(message.from_user.id))).get('fsub')
             if channel:        
